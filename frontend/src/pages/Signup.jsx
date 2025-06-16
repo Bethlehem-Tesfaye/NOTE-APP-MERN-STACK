@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function Signup() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -16,7 +17,7 @@ function Signup() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        `${API_BASE_URL}/api/auth/register`,
         { name, email, password }
       );
       if (response.data.success) {
@@ -86,7 +87,7 @@ function Signup() {
               Signup
             </button>
             <p className="text-center">
-              Already have account? <Link to="/login">Login</Link>{" "}
+              Already have account? <Link to="/login">Login</Link>
             </p>
           </div>
         </form>

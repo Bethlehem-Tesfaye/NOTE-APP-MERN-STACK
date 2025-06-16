@@ -5,6 +5,7 @@ import { useAuth } from "../context/ContextProvider";
 import { toast } from "react-toastify";
 
 function Login() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -15,7 +16,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        `${API_BASE_URL}/api/auth/login`,
         { email, password }
       );
       if (response.data.success) {
@@ -48,7 +49,7 @@ function Login() {
             <label htmlFor="Email">Email</label>
             <input
               className="w-full px-3 py-2 border rounded-2xl"
-              type="emial"
+              type="email"
               placeholder="Enter email"
               onChange={(e) => {
                 setEmail(e.target.value);

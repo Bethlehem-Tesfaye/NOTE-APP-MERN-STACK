@@ -9,6 +9,8 @@ import { useAuth } from "../context/ContextProvider";
 import { toast } from "react-toastify";
 
 function Home() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+
   const [isModelOpen, setIsModelOpen] = useState(false);
   const [notes, setNotes] = useState([]);
   const { user } = useAuth();
@@ -20,9 +22,9 @@ function Home() {
   const fectNotes = async () => {
     try {
       setIsLoading(true);
-      const { data } = await axios.get("http://localhost:5000/api/note/notes", {
+      const { data } = await axios.get(`${API_BASE_URL}/api/note/notes`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, //send token to server side
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setNotes(data.notes);
@@ -41,18 +43,18 @@ function Home() {
     if (user) {
       fectNotes();
     } else {
-      setNotes([]); // clear notes if not logged in
+      setNotes([]);
     }
   }, [user]);
 
   const addNote = async (title, description) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/note/add",
+        `${API_BASE_URL}/api/note/add`,
         { title, description },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, //send token to server side
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -78,13 +80,12 @@ function Home() {
   const editNote = (note) => {
     setCurrentNote(note);
     setIsModelOpen(true);
-    // console.log(currentNote);
   };
 
   const onEdit = async (id, title, description) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/note/edit/${id}`,
+        `${API_BASE_URL}/api/note/edit/${id}`,
         { title, description },
         {
           headers: {
@@ -111,11 +112,11 @@ function Home() {
       console.log(error);
     }
   };
-  
+
   const deleteNote = async (note) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/note/delete/${note._id}`,
+        `${API_BASE_URL}/api/note/delete/${note._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -124,7 +125,6 @@ function Home() {
       );
       if (response.data.success) {
         toast.success(response.data.message);
-
         fectNotes();
       }
     } catch (error) {
